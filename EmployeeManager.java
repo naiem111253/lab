@@ -22,8 +22,7 @@ public class EmployeeManager {
         if (args[0].equals("l")) {
             System.out.println("Loading data ...");
             try {
-                String[] employees = readEmployeesFromFile();
-                for (String employee : employees) {
+                for (String employee : readEmployeesFromFile()) {
                     System.out.println(employee);
                 }
             } catch (Exception e) {
@@ -33,33 +32,27 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
             try {
                 String[] employees = readEmployeesFromFile();
-                Random rand = new Random();
-                int idx = rand.nextInt(employees.length);
-                System.out.println(employees[idx]);
+                System.out.println(employees[new Random().nextInt(employees.length)]);
             } catch (Exception e) {
             }
             System.out.println("Data Loaded.");
         } else if (args[0].contains("+")) {
             System.out.println("Loading data ...");
             try {
-                String newEmployee = args[0].substring(1);
                 BufferedWriter bufferedWriter = new BufferedWriter(
-                        new FileWriter("employees.txt", true));
-                bufferedWriter.write(", " + newEmployee);
+                        new FileWriter(Constants.EMPLOYEES_FILE_PATH, true));
+                bufferedWriter.write(", " + args[0].substring(1));
                 bufferedWriter.close();
             } catch (Exception e) {
             }
             System.out.println("Data Loaded.");
         } else if (args[0].contains("?")) {
-            System.out.println("Loading data ...");
+            System.out.println("Loading data ...");            
             try {
-                String[] employees = readEmployeesFromFile();
-                boolean found = false;
-                String searchEmployee = args[0].substring(1);
-                for (int i = 0; i < employees.length && !found; i++) {
-                    if (employees[i].equals(searchEmployee)) {
+                for (String employee : readEmployeesFromFile()) {
+                    if (employee.equals(args[0].substring(1))) {
                         System.out.println("Employee found!");
-                        found = true;
+                        break;
                     }
                 }
             } catch (Exception e) {
@@ -68,9 +61,8 @@ public class EmployeeManager {
         } else if (args[0].contains("c")) {
             System.out.println("Loading data ...");
             try {
-                String[] employees = readEmployeesFromFile();
                 int wordCount = 0;
-                for (String employee : employees) {
+                for (String employee : readEmployeesFromFile()) {
                     wordCount += employee.split(" ").length;
                 }
                 System.out.println(wordCount + " word(s) found");
@@ -81,9 +73,8 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
             try {
                 String[] employees = readEmployeesFromFile();
-                String employeeToUpdate = args[0].substring(1);
                 for (int i = 0; i < employees.length; i++) {
-                    if (employees[i].equals(employeeToUpdate)) {
+                    if (employees[i].equals(args[0].substring(1))) {
                         employees[i] = "Updated";
                     }
                 }
@@ -94,10 +85,8 @@ public class EmployeeManager {
         } else if (args[0].contains("d")) {
             System.out.println("Loading data ...");
             try {
-                String[] employees = readEmployeesFromFile();
-                String employeeToDelete = args[0].substring(1);
-                List<String> employeeList = new ArrayList<>(Arrays.asList(employees));
-                employeeList.remove(employeeToDelete);
+                List<String> employeeList = new ArrayList<>(Arrays.asList(readEmployeesFromFile()));
+                employeeList.remove(args[0].substring(1));
                 writeEmployeesToFile(employeeList.toArray(new String[0]));
             } catch (Exception e) {
             }
